@@ -1,0 +1,66 @@
+.navbar {
+  display: block;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  overflow: visible;
+  
+}
+
+.navbar a {
+  display: block;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  color: #333;
+  text-decoration: none;
+  border: solid gray 3px;
+}
+.navbar:hover{
+  z-index: 1;
+}
+
+.navbar a:hover{
+  display: block;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  color: #333;
+  background-color: cadetblue;
+  text-decoration: none;
+  border: solid gray 3px
+  
+
+}
+
+
+.dropdown {
+  display: none;
+  text-decoration: none;
+  background-color: #f9f9f9;
+  position: absolute; 
+  top: 100%;    
+  left: 0;
+  display: none;  
+  z-index: 9;
+}
+
+.dropdown:hover{
+  list-style: none;
+  display: block;
+  list-style: none;
+  left: 0;
+
+
+}
+
+.navbar li {
+  position: relative; 
+}
+
+.navbar li:hover .dropdown {
+  display: block; 
+  list-style: none;
+  left: 0;
+}
+
