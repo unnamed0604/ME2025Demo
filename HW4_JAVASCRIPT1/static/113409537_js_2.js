@@ -4,7 +4,7 @@ document.write(
 )
 for(var i=0; i<=9; i++){
 {
-    if(i%3==0){
+    if((i+1)%3==0){
         document.write(
         '<button onclick="document.getElementById(\'input\').value +=\''+i+'\'">'+i+'</button><br>'
         )
@@ -17,5 +17,29 @@ for(var i=0; i<=9; i++){
 
     }
 }
-    
 }
+document.write(
+   '<button onclick="document.getElementById(\'display\').value =\'\'">Clear</button><br>'
+
+)
+document.write(
+   '<button onclick="">+</button>'
+)
+document.write(
+   '<button onclick="">-</button>'
+)
+document.write(
+   '<button onclick="">*</button>'
+)
+document.write(
+   '<button onclick="">/</button>'
+)
+document.write(
+   '<button onclick="">(</button>'
+)
+document.write(
+   '<button onclick="">)</button>'
+)
+document.write(
+   '<button onclick="">=</button>'
+)
