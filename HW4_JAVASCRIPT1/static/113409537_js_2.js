@@ -19,27 +19,71 @@ for(var i=0; i<=9; i++){
 }
 }
 document.write(
-   '<button onclick="document.getElementById(\'display\').value =\'\'">Clear</button><br>'
+   '<button onclick="Clear()">Clear</button><br>'
 
 )
+function Clear(){
+   document.getElementById('input').value =" "
+
+}
+
+
 document.write(
-   '<button onclick="">+</button>'
+   '<button onclick="Plus()">+</button>'
 )
+function Plus(){
+   document.getElementById('input').value +="+"
+}
+
+
 document.write(
-   '<button onclick="">-</button>'
+   '<button onclick="Sub()">-</button>'
 )
+function Sub(){
+   document.getElementById('input').value +="-"
+}
+
+
 document.write(
-   '<button onclick="">*</button>'
+   '<button onclick="Mul()">*</button>'
 )
+function Mul(){
+   document.getElementById('input').value +="*"
+}
+
+
 document.write(
-   '<button onclick="">/</button>'
+   '<button onclick="Div()">/</button>'
 )
+function Div(){
+   document.getElementById('input').value +="/"
+}
+
+
 document.write(
-   '<button onclick="">(</button>'
+   '<button onclick="left()">(</button>'
 )
+function left(){
+   document.getElementById('input').value +="("
+}
+
+
 document.write(
-   '<button onclick="">)</button>'
+   '<button onclick="right()">)</button>'
 )
+function right(){
+   document.getElementById('input').value +=")"
+}
+
 document.write(
-   '<button onclick="">=</button>'
+   '<button onclick="equal()">=</button>'
 )
+function equal(){
+   let equation = eval(document.getElementById('input').value)
+   alert(document.getElementById("input").value + "=" + equation)
+
+}
+
+
+
+
