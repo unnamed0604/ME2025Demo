@@ -50,11 +50,11 @@ function plus1(){
         total1.textContent =0
     }
     else{
-         checkout.textContent = parseInt(total1.textContent) + parseInt(total2.textContent) + parseInt(total3.textContent)
+        checkout.textContent = parseInt(total1.textContent) + parseInt(total2.textContent) + parseInt(total3.textContent)
     }
 }
 function minus1(){
-    if(stock1.value>0){
+    if(stock1.value>1){
     stock1 =document.getElementById("buy_number_1")
     stock1.value =parseInt(stock1.value) - 1
     total1.textContent = stock1.value*price1.textContent
@@ -83,7 +83,7 @@ function plus2(){
     }
 }
 function minus2(){
-    if(stock2.value>0){
+    if(stock2.value>1){
     stock2 =document.getElementById("buy_number_2")
     stock2.value =parseInt(stock2.value) - 1
     total2.textContent = stock2.value*price2.textContent
@@ -95,7 +95,6 @@ function minus2(){
          checkout.textContent = parseInt(total1.textContent) + parseInt(total2.textContent) + parseInt(total3.textContent)
     }
 }
-
 
 
 function plus3(){
@@ -112,7 +111,7 @@ function plus3(){
     }
 }
 function minus3(){
-    if(stock3.value>0){
+    if(stock3.value>1){
     stock3 =document.getElementById("buy_number_3")
     stock3.value =parseInt(stock3.value) - 1
     total3.textContent = stock3.value*price3.textContent
@@ -124,6 +123,53 @@ function minus3(){
          checkout.textContent = parseInt(total1.textContent) + parseInt(total2.textContent) + parseInt(total3.textContent)
     }
 }
+
+stock1.addEventListener("input", () => {
+    if(stock1.value>20){
+        stock1.value = 20
+         total1.textContent = stock1.value*price1.textContent
+         checkout.textContent = parseInt(total1.textContent) + parseInt(total2.textContent) + parseInt(total3.textContent)
+    }
+    if(isNaN(stock1.value) || stock1.value<1){
+        stock1.value = 1
+         total1.textContent = stock1.value*price1.textContent
+         checkout.textContent = parseInt(total1.textContent) + parseInt(total2.textContent) + parseInt(total3.textContent)
+    }
+
+
+})
+stock2.addEventListener("input", () => {
+    if(stock2.value>40){
+        stock2.value = 40
+         total2.textContent = stock2.value*price2.textContent
+         checkout.textContent = parseInt(total1.textContent) + parseInt(total2.textContent) + parseInt(total3.textContent)
+    }
+    if(isNaN(stock2.value) ||stock2.value<1){
+        stock2.value = 1
+         total2.textContent = stock2.value*price2.textContent
+         checkout.textContent = parseInt(total1.textContent) + parseInt(total2.textContent) + parseInt(total3.textContent)
+    }
+
+
+})
+stock3.addEventListener("input", () => {
+    if(stock3.value>30){
+        stock3.value = 30
+         total3.textContent = stock3.value*price3.textContent
+         checkout.textContent = parseInt(total1.textContent) + parseInt(total2.textContent) + parseInt(total3.textContent)
+    }
+    if(isNaN(stock3.value) ||stock1.value<1){
+        stock3.value = 1
+         total3.textContent = stock3.value*price1.textContent
+         checkout.textContent = parseInt(total1.textContent) + parseInt(total2.textContent) + parseInt(total3.textContent)
+    }
+
+
+})
+
+
+
+
 
 checkboxes.forEach(cb => {
     cb.addEventListener('change', () => {
