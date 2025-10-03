@@ -3,10 +3,19 @@ table {
   border-style: double;
   border-collapse: collapse;
   width: 80%;
-  margin: 20px auto;
+
 }
 th, td{
   border: 1px solid #ccc;
   padding: 10px;
   text-align: center;
+}
+button.Checkout {
+    background-color: gray;
+    color: white;             
+    padding: 10px 20px;        
+    border: none;              
+    border-radius: 5px;        
+    font-size: 16px;
+
 }
