@@ -22,38 +22,46 @@
                 <tr>
                     <td><input type="checkbox" class="checkItem"></td>
                     <td>BENQ護眼螢幕</td>
-                    <td class="stock">20</td>
-                    <td class="price">7000</td>
+                    <td class="stock1">20</td>
+                    <td id="price1">7000</td>
                     <td>
-                        <button class="minus">-</button>
-                        <input type="text" class="qty" value="1">
-                        <button class="plus">+</button>
+                        <button class="minus" id="minus1" onclick="minus1()">-</button>
+                        <input type="text" class="qty" value="1" id="buy_number_1">
+                        <button class="plus" id="plus1" onclick="plus1()">+</button>
                     </td>
-                    <td class="subtotal"></td>
+                    <td class="subtotal" id="total1"></td>
                 </tr>
                 <tr>
                     <td><input type="checkbox" class="checkItem"></td>
                     <td>3M 抗眩燈</td>
-                    <td class="stock">40</td>
-                    <td class="price">2000</td>
+                    <td class="stock2">40</td>
+                    <td id="price2">2000</td>
                     <td>
-                        <button class="minus">-</button>
-                        <input type="text" class="qty" value="1">
-                        <button class="plus">+</button>
+                        <button class="minus" id="minus2" onclick="minus2()">-</button>
+                        <input type="text" class="qty" value="1" id="buy_number_2">
+                        <button class="plus" id="plus2" onclick="plus2()">+</button>
                     </td>
-                    <td class="subtotal"></td>
+                    <td class="subtotal" id="total2"></td>
                 </tr>
                 <tr>
                     <td><input type="checkbox" class="checkItem"></td>
                     <td>DJI MINI 4 Pro</td>
-                    <td class="stock">30</td>
-                    <td class="price">30000</td>
+                    <td class="stock3">30</td>
+                    <td id="price3">30000</td>
                     <td>
-                    <button class="minus">-</button>
-                    <input type="text" class="qty" value="1">
-                    <button class="plus">+</button>
+                    <button class="minus" id="minus3" onclick="minus3()">-</button>
+                    <input type="text" class="qty" value="1" id="buy_number_3">
+                    <button class="plus" id="plus3" onclick="plus3()">+</button>
                     </td>
-                    <td class="subtotal"></td>
+                    <td class="subtotal" id="total3"></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>Total</td>
+                    <td id="alltotal"></td>
                 </tr>
             </tbody>
         </table>
