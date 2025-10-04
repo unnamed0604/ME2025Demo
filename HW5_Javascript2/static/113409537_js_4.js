@@ -1,3 +1,4 @@
+//checkbox, items
 var checkboxes = document.querySelectorAll('.checkItem')
 var checkItem1 = document.getElementById("checkItem1")
 var checkItem2 = document.getElementById("checkItem2")
@@ -5,6 +6,8 @@ var checkItem3 = document.getElementById("checkItem3")
 var checkallbox = document.getElementById("checkall")
 var checkout = document.getElementById("alltotal")
 
+
+//total/stock/price
 var total1 = document.getElementById("total1")
 var stock1 = document.getElementById("buy_number_1")
 var price1 = document.getElementById("price1")
@@ -20,10 +23,29 @@ var stock3 = document.getElementById("buy_number_3")
 var price3 = document.getElementById("price3")
 
 
+//stocklimit
+var stockLimit1 = 20;
+var stockLimit2 = 40;
+var stockLimit3 = 30;
+
+//stocknow
+var stocknow1 = document.getElementById("stocknow1")
+var stocknow2 = document.getElementById("stocknow2")
+var stocknow3 = document.getElementById("stocknow3")
+
+//reset stocknow
+stocknow1.textContent = stockLimit1
+stocknow2.textContent = stockLimit2
+stocknow3.textContent = stockLimit3
+
+
+
 console.log("hi")
 console.log(document.getElementById("checkall").checked);
 console.log("hi")
 
+
+//checkall_funk
 function checkall(){
     if(checkallbox.checked == true){
         checkboxes.forEach(cb => cb.checked =true)
@@ -39,9 +61,9 @@ function checkall(){
 }
 
 
-
+//plus and minus buttons
 function plus1(){
-    if(stock1.value<20){
+    if(stock1.value<stocknow1.textContent){
         stock1 =document.getElementById("buy_number_1")
         stock1.value =parseInt(stock1.value) + 1
         total1.textContent = stock1.value*price1.textContent
@@ -66,11 +88,8 @@ function minus1(){
          checkout.textContent = parseInt(total1.textContent) + parseInt(total2.textContent) + parseInt(total3.textContent)
     }
 }
-
-
-
 function plus2(){
-    if(stock2.value<40){
+    if(stock2.value<stocknow2.textContent){
         stock2 =document.getElementById("buy_number_2")
         stock2.value =parseInt(stock2.value) + 1
         total2.textContent = stock2.value*price2.textContent
@@ -95,10 +114,8 @@ function minus2(){
          checkout.textContent = parseInt(total1.textContent) + parseInt(total2.textContent) + parseInt(total3.textContent)
     }
 }
-
-
 function plus3(){
-    if(stock3.value<30){
+    if(stock3.value<stocknow3.textContent){
         stock3 =document.getElementById("buy_number_3")
         stock3.value =parseInt(stock3.value) + 1
         total3.textContent = stock3.value*price3.textContent
@@ -124,6 +141,7 @@ function minus3(){
     }
 }
 
+//listener
 stock1.addEventListener("input", () => {
     if(stock1.value>20){
         stock1.value = 20
@@ -170,7 +188,7 @@ stock3.addEventListener("input", () => {
 
 
 
-
+//detecting checkbox change
 checkboxes.forEach(cb => {
     cb.addEventListener('change', () => {
         const allChecked = Array.from(checkboxes).every(item => item.checked);
@@ -198,6 +216,58 @@ checkboxes.forEach(cb => {
 
     });
 });
+
+//checkout_func
+function checkout_func(){
+    if(checkout.textContent>0){
+        if(checkItem1.checked == false){
+            stock1.value=0
+        }
+        if(checkItem2.checked == false){
+            stock2.value=0
+        }
+        if(checkItem3.checked == false){
+            stock3.value=0
+        }
+        alert("Thank u for the buying\nBENQ護眼螢幕*"+stock1.value+"\n3M 抗眩燈*"+stock2.value+"\nDJI MINI 4 Pro*"+stock3.value+"\nTotal: "+checkout.textContent)
+        stocknow1.textContent=stocknow1.textContent-stock1.value
+        stocknow2.textContent=stocknow2.textContent-stock2.value
+        stocknow3.textContent=stocknow3.textContent-stock3.value
+
+        checkallbox.checked=false
+        checkboxes.forEach(cb => cb.checked =false)
+        checkout.textContent = 0
+        if(stock1>0){
+            stock1.value =1
+        }
+        else{
+            stock1.value =0
+        }
+        if(stock2>0){
+            stock2.value =1
+        }
+        else{
+            stock2.value =0
+        }
+        if(stock3.value>0){
+            stock3.value =1
+        }
+        else{
+            stock2.value =0
+        }
+
+        total1.textContent = 0
+        total2.textContent = 0
+        total3.textContent = 0
+        checkout.textContent = parseInt(total1.textContent) + parseInt(total2.textContent) + parseInt(total3.textContent)
+
+
+    }
+
+}
+
+
+
 
 total1.textContent = 0
 total2.textContent = 0
