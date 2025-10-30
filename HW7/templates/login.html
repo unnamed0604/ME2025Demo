@@ -1,0 +1,36 @@
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>教師登入</title>
+  <style>
+
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>教師登入</h2>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, msg in messages %}
+          <div class="flash {{category}}">{{ msg }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <form method="post" action="{{ url_for('login') }}">
+      <label for="username">教師帳號</label>
+      <input id="username" name="username" type="text" value="{{ username|default('') }}" required>
+      <br>
+
+      <label for="password">密碼</label>
+      <input id="password" name="password" type="password" required>
+
+      <div style="margin-top:12px">
+        <button type="submit" class="btn btn-primary">登入</button>
+      </div>
+    </form>
+  </div>
+</body>
+</html>

@@ -1,12 +1,19 @@
 var answer = Math.floor(Math.random() * 101);
 console.log(answer);
 var count = 0;
+var countingtimes = 0;
 
 var title = document.getElementById('title')
+
+var container = document.getElementById('record')
+
 var new_element = document.createElement('h3')
 var timer = document.createElement('h2')
 timer.textContent = "Time: "
 title.appendChild(timer)
+
+
+var record = document.createElement("li")
 
 var time_num = 0
 
@@ -24,7 +31,6 @@ function reset(){
     count = 0
     clearInterval(start)
     reset_flag = 1
-    start = setInterval(counting_time, 1000)
     hint_flag = 0
 
 
@@ -78,9 +84,17 @@ function guess(){
         start = setInterval(counting_time, 1000)
     }
     else{
+        var now = new Date()
+        time = now.toLocaleTimeString()
         count= count+1;
+        countingtimes++
 
-        alert("Correct, U have try "+count+" times." )
+        record = document.createElement("li")
+        record.textContent = countingtimes+'. '+"guess "+count+" times and spent "+time_num+" secs "+time
+        container.appendChild(record)
+
+        alert("Correct, U have try "+count+" times and u spent "+time_num+" secs." )
+
 
         reset()
 

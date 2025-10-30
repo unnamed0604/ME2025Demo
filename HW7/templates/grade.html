@@ -1,0 +1,97 @@
+<!-- templates/grade.html -->
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>成績輸入系統</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='app.js') }}" media="none" onload="this.media='all'">
+  <style>
+
+  </style>
+</head>
+<body>
+  <header>
+    <div class="teacher">目前登入教師：<span id="teacherName">{{ teacher }}</span></div>
+    <div class="top-actions">
+      <form action="{{ url_for('logout') }}" method="get" style="display:inline;">
+        <button class="btn" type="submit">登出</button>
+      </form>
+      <button id="refreshBtn" class="btn">重新取得資料</button>
+    </div>
+  </header>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, msg in messages %}
+        <div class="flash {{ category }}">{{ msg }}</div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  <div class="card">
+    <h3>目前已儲存的成績（依學號由小到大）</h3>
+    <div id="tableWrap">
+      <table id="gradesTable">
+        <thead>
+          <tr><th>學生姓名</th><th>學號</th><th>成績</th></tr>
+        </thead>
+        <tbody>
+          {% for row in grades %}
+            <tr>
+              <td>{{ row['name'] }}</td>
+              <td>{{ row['student_id'] }}</td>
+              <td>{{ row['score'] }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>新增成績</h3>
+    <form class="inline" action="{{ url_for('add_grade') }}" method="post">
+      <label>姓名：<input name="name" type="text" required></label>
+      <br>
+      <label>學號：<input name="student_id" type="number" required></label>
+      <br>
+      <label>成績：<input name="score" type="number" required></label>
+      <br>
+      <button class="btn btn-primary" type="submit">提交</button>
+    </form>
+  </div>
+
+  <div class="card">
+    <h3>刪除學生資料</h3>
+    <form class="inline" action="{{ url_for('delete_grade') }}" method="post">
+      <label>輸入欲刪除的學號：<input name="student_id_delete" type="number" required></label>
+      <button class="btn btn-danger" type="submit">刪除</button>
+    </form>
+  </div>
+
+  <script>
+    // fetch API to refresh table without reload
+    document.getElementById('refreshBtn').addEventListener('click', function(){
+      fetch('{{ url_for("api_grades") }}').then(res => {
+        if (!res.ok) throw new Error("取得資料失敗");
+        return res.json();
+      }).then(data => {
+        const tbody = document.querySelector('#gradesTable tbody');
+        tbody.innerHTML = '';
+        data.forEach(r => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `<td>${escapeHtml(r.name)}</td><td>${escapeHtml(String(r.student_id))}</td><td>${escapeHtml(String(r.score))}</td>`;
+          tbody.appendChild(tr);
+        });
+      }).catch(err => {
+        alert("更新失敗：" + err.message);
+      });
+    });
+
+    function escapeHtml(s){
+      return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+  </script>
+</body>
+</html>
