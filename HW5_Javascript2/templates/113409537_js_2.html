@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <link rel="stylesheet" href="../static/113409537_js_2.css">
+
+    </head>
+    <body>
+        <h2>購物車</h2>
+        <table id="cart">
+            <thead>
+                <tr>
+                    <th><input type="checkbox" id= "checkall" onclick="checkall()"></th>
+                    <th>商品名稱</th>
+                    <th>商品庫存</th>
+                    <th>單價</th>
+                    <th>數量</th>
+                    <th>總計</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><input type="checkbox" class="checkItem" id="checkItem1"></td>
+                    <td><img src="https://cdn-icons-png.flaticon.com/512/4552/4552937.png" width="100px" height="100px" alt="loading fail"><br>商品A</td>
+                    <td class="stock1" id="stocknow1"></td>
+                    <td id="price1">7000</td>
+                    <td>
+                        <button class="minus" id="minus1" onclick="minus1()">-</button>
+                        <input type="text" class="qty" value="1" id="buy_number_1">
+                        <button class="plus" id="plus1" onclick="plus1()">+</button>
+                    </td>
+                    <td class="subtotal" id="total1"></td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox" class="checkItem" id="checkItem2"></td>
+                    <td><img src="https://img.freepik.com/free-psd/number-illustration-isolated_23-2151463626.jpg?semt=ais_hybrid&w=740&q=80" width="100px" height="100px" alt="loading fail"><br>商品2</td>
+                    <td class="stock2" id="stocknow2"></td>
+                    <td id="price2">2000</td>
+                    <td>
+                        <button class="minus" id="minus2" onclick="minus2()">-</button>
+                        <input type="text" class="qty" value="1" id="buy_number_2">
+                        <button class="plus" id="plus2" onclick="plus2()">+</button>
+                    </td>
+                    <td class="subtotal" id="total2"></td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox" class="checkItem" id="checkItem3"></td>
+                    <td><img src="https://blog2.huayuworld.org/vickychu59/wp-content/uploads/sites/620/2015/08/%E3%84%87.jpg" alt="loadnig fail" width="100px" height="100px"><br>商品ㄇ</td>
+                    <td class="stock3" id="stocknow3"></td>
+                    <td id="price3">30000</td>
+                    <td>
+                    <button class="minus" id="minus3" onclick="minus3()">-</button>
+                    <input type="text" class="qty" value="1" id="buy_number_3">
+                    <button class="plus" id="plus3" onclick="plus3()">+</button>
+                    </td>
+                    <td class="subtotal" id="total3"></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>Total</td>
+                    <td id="alltotal"></td>
+                </tr>
+            </tbody>
+        </table>
+        <br><br>
+
+        <button class="Checkout" id="checkout" onclick="checkout_func()">結帳</button>
+
+
+
+
+
+        <script src="../static/113409537_js_2.js"></script>
+    </body>
+
+
+
+
+</html>

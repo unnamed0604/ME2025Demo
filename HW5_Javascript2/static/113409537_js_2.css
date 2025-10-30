@@ -1,0 +1,24 @@
+table {
+  border: 1px solid black;
+  border-style: double;
+  border-collapse: collapse;
+  width: 80%;
+
+}
+th, td{
+  border: 1px solid #ccc;
+  padding: 10px;
+  text-align: center;
+}
+button.Checkout {
+    background-color: gray;
+    color: white;             
+    padding: 10px 20px;        
+    border: none;              
+    border-radius: 5px;        
+    font-size: 16px;
+
+}
+.qty{
+    width: 30px;
+}
