@@ -76,8 +76,6 @@ const products = [
 
 
 
-
-
 // === 狀態：每列的勾選與數量 ===
 const rowState = new Map(); 
 
