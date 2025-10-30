@@ -14,7 +14,25 @@ const products = [
 
 
 (function showUsername() {
-// === 顯示登入使用者於導行列，補齊程式碼 ===
+  const username = localStorage.getItem('username');
+  if (!username) return;
+
+  const div = document.createElement('div');
+  div.style.position = 'fixed';
+  div.style.top = '12px';
+  div.style.left = '12px';
+  div.style.background = '#f3f4f6';
+  div.style.padding = '8px 12px';
+  div.style.border = '1px solid #d1d5db';
+  div.style.borderRadius = '6px';
+  div.style.zIndex = '20';
+  div.innerHTML = `使用者：<strong>${username}</strong> <button id="logout-btn" style="margin-left:10px;">登出</button>`;
+  document.body.appendChild(div);
+
+  document.getElementById('logout-btn').addEventListener('click', () => {
+    localStorage.removeItem('username');
+    location.href = './page_login.html'; // 回到登入頁
+  });
 })();
 
 
@@ -56,6 +74,10 @@ const products = [
   }
 })();
 
+
+
+
+
 // === 狀態：每列的勾選與數量 ===
 const rowState = new Map(); 
 
@@ -63,6 +85,26 @@ const rowState = new Map();
 function normalizeImg(url = '') {
   return url.replace(/\/{2,}/g, '/').replace('../static', './static');
 }
+
+// === 工具：規整圖片路徑 ../static/... -> ./static/... 且移除多餘斜線 ===
+function normalizeImg(url = '') {
+  return url.replace(/\/{2,}/g, '/').replace('../static', './static');
+}
+
+// === 顯示登入使用者名稱 & 登出 ===
+(function showUsername() {
+  const username = localStorage.getItem('username') || 'Guest';
+  const userEl = document.getElementById('current-user');
+  if (userEl) userEl.textContent = username;
+
+  const logoutBtn = document.getElementById('logout-btn');
+  if (logoutBtn) {
+    logoutBtn.addEventListener('click', () => {
+      localStorage.removeItem('username');
+      location.href = '/page_login';
+    });
+  }
+})();
 
 // === 渲染產品表格（含 checkbox、± 數量、單列總金額） ===
 function display_products(products_to_display) {
@@ -72,7 +114,7 @@ function display_products(products_to_display) {
 
   for (let i = 0; i < products_to_display.length; i++) {
     const p = products_to_display[i];
-    const key = `${p.name}-${i}`; // 簡單唯一鍵（也可用 id）
+    const key = `${p.name}-${i}`;
     if (!rowState.has(key)) rowState.set(key, { checked: false, qty: 0 });
 
     const state = rowState.get(key);
@@ -89,9 +131,9 @@ function display_products(products_to_display) {
         <td>${p.category}</td>
         <td>
           <div class="qty" style="display:inline-flex;align-items:center;gap:6px;">
-            <button type="button" class="btn-dec" style="padding:2px 8px;">-</button>
-            <input type="number" class="qty-input" min="0" value="${state.qty}" style="width:64px;">
-            <button type="button" class="btn-inc" style="padding:2px 8px;">+</button>
+            <button type="button" class="btn-dec" style="padding:2px 8px;" disabled>-</button>
+            <input type="number" class="qty-input" min="0" value="${state.qty}" style="width:64px;" disabled>
+            <button type="button" class="btn-inc" style="padding:2px 8px;" disabled>+</button>
           </div>
         </td>
         <td class="row-total">${total.toLocaleString()}</td>
@@ -103,57 +145,24 @@ function display_products(products_to_display) {
   refreshSummary();
 }
 
-// === 篩選（修正 push 的目標） ===
-function apply_filter(products_to_filter) {
-  const max_price = document.getElementById('max_price')?.value ?? '';
-  const min_price = document.getElementById('min_price')?.value ?? '';
-  const gender = document.getElementById('gender')?.value ?? 'All';
+// === 更新 ± 按鈕啟用狀態 ===
+function updateQtyButtons(tr) {
+  const chk = tr.querySelector('.row-check');
+  const qtyInput = tr.querySelector('.qty-input');
+  const btnDec = tr.querySelector('.btn-dec');
+  const btnInc = tr.querySelector('.btn-inc');
 
-  const category_shirts = document.getElementById('shirts')?.checked ?? false;
-  const category_pants  = document.getElementById('pants')?.checked ?? false;
-  const category_shoes  = document.getElementById('shoes')?.checked ?? false;
-  const category_cap    = document.getElementById('cap')?.checked ?? false;
-
-  const result = [];
-  for (let i = 0; i < products_to_filter.length; i++) {
-    // 價格條件
-    const price = Number(products_to_filter[i].price);
-    const hasMin = (min_price !== '' && !isNaN(Number(min_price)));
-    const hasMax = (max_price !== '' && !isNaN(Number(max_price)));
-    let fit_price = true;
-    if (hasMin && hasMax) {
-      fit_price = price >= Number(min_price) && price <= Number(max_price);
-    } else if (hasMin) {
-      fit_price = price >= Number(min_price);
-    } else if (hasMax) {
-      fit_price = price <= Number(max_price);
-    }
-
-    // 性別條件（Male/Female 對應 男裝/女裝/通用）
-    const g = products_to_filter[i].gender; // '男裝' | '女裝' | '通用'
-    let fit_gender = true;
-    if (gender === 'Male') {
-      fit_gender = (g === '男裝' || g === '通用');
-    } else if (gender === 'Female') {
-      fit_gender = (g === '女裝' || g === '通用');
-    } // 'All' → 全通過
-
-    // 類別條件（多選 OR；未選視為全通過）
-    const selectedCats = [];
-    if (category_shirts) selectedCats.push('上衣');
-    if (category_pants)  selectedCats.push('褲/裙子');
-    if (category_shoes)  selectedCats.push('鞋子');
-    if (category_cap)    selectedCats.push('帽子');
-
-    const fit_category = (selectedCats.length === 0) ||
-                         selectedCats.includes(products_to_filter[i].category);
-
-    if (fit_price && fit_gender && fit_category) {
-      result.push(products_to_filter[i]); // 修正這一行
-    }
+  if (chk.checked) {
+    if (Number(qtyInput.value) === 0) qtyInput.value = 1;
+    qtyInput.disabled = false;
+    btnInc.disabled = false;
+    btnDec.disabled = Number(qtyInput.value) <= 1;
+  } else {
+    qtyInput.value = 0;
+    qtyInput.disabled = true;
+    btnInc.disabled = true;
+    btnDec.disabled = true;
   }
-  // 重新渲染（保留既有 rowState 的勾選/數量，如需清空可在此重置 rowState）
-  display_products(result);
 }
 
 // === 事件委派：處理 checkbox、± 按鈕、數量輸入 ===
@@ -167,42 +176,33 @@ function apply_filter(products_to_filter) {
     const key = tr.getAttribute('data-key');
     const st = rowState.get(key) || { checked: false, qty: 0 };
 
-    // 列 checkbox
     if (e.target.classList.contains('row-check')) {
       st.checked = e.target.checked;
       rowState.set(key, st);
+      updateQtyButtons(tr);
       refreshSummary();
       return;
     }
 
-    // 減少數量
     if (e.target.classList.contains('btn-dec')) {
       const input = tr.querySelector('.qty-input');
-      const v = Math.max(0, Number(input.value || 0) - 1);
+      const v = Math.max(1, Number(input.value || 1) - 1);
       input.value = v;
       st.qty = v;
-      // 若未勾選且 qty>0，自動勾選
-      const chk = tr.querySelector('.row-check');
-      if (!chk.checked && v > 0) {
-        chk.checked = true; st.checked = true;
-      }
       rowState.set(key, st);
+      updateQtyButtons(tr);
       updateRowTotal(tr);
       refreshSummary();
       return;
     }
 
-    // 增加數量
     if (e.target.classList.contains('btn-inc')) {
       const input = tr.querySelector('.qty-input');
-      const v = Math.max(0, Number(input.value || 0) + 1);
+      const v = Number(input.value || 1) + 1;
       input.value = v;
       st.qty = v;
-      const chk = tr.querySelector('.row-check');
-      if (!chk.checked && v > 0) {
-        chk.checked = true; st.checked = true;
-      }
       rowState.set(key, st);
+      updateQtyButtons(tr);
       updateRowTotal(tr);
       refreshSummary();
       return;
@@ -214,16 +214,11 @@ function apply_filter(products_to_filter) {
     const tr = e.target.closest('tr');
     const key = tr.getAttribute('data-key');
     const st = rowState.get(key) || { checked: false, qty: 0 };
-
-    const v = Math.max(0, Number(e.target.value || 0));
+    let v = Math.max(1, Number(e.target.value || 1));
     e.target.value = v;
     st.qty = v;
-
-    const chk = tr.querySelector('.row-check');
-    if (!chk.checked && v > 0) {
-      chk.checked = true; st.checked = true;
-    }
     rowState.set(key, st);
+    updateQtyButtons(tr);
     updateRowTotal(tr);
     refreshSummary();
   });
@@ -241,6 +236,8 @@ function refreshSummary() {
   const tbody = document.querySelector('#products table tbody');
   if (!tbody) return;
 
+
+
   let selectedCount = 0;
   let totalQty = 0;
   let totalPrice = 0;
@@ -257,7 +254,12 @@ function refreshSummary() {
   });
 
   const btnOrder = document.getElementById('place-order');
-  if (btnOrder) btnOrder.disabled = !(selectedCount > 0 && totalQty > 0);
+  if (btnOrder) {
+    btnOrder.disabled = !(selectedCount > 0 && totalQty > 0);
+    btnOrder.style.opacity = btnOrder.disabled ? '0.5' : '1';
+    btnOrder.style.cursor = btnOrder.disabled ? 'not-allowed' : 'pointer';
+  }
+
 
   const summaryEl = document.getElementById('cart-summary');
   if (summaryEl) summaryEl.textContent =
@@ -282,39 +284,30 @@ function refreshSummary() {
 
       const name = tr.children[2]?.textContent?.trim() || '';
       const price = Number(tr.querySelector('[data-price]')?.dataset?.price || 0);
-
       orderItems.push({ name, price, qty, total: price * qty });
     });
 
     if (!orderItems.length) return;
 
+    // 建立 alert 文字
+    const now = new Date();
+    const dateStr = `${now.getFullYear()}/${String(now.getMonth()+1).padStart(2,'0')}/${String(now.getDate()).padStart(2,'0')}`;
+    const timeStr = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+    let alertMsg = `${dateStr} ${timeStr}，已成功下單:\n\n`;
+    let totalPrice = 0;
+    orderItems.forEach(item => {
+      alertMsg += ` ${item.name}:  ${item.price} NT/件 x${item.qty}  共 ${item.total} NT \n\n`;
+      totalPrice += item.total;
+    });
+    alertMsg += `此單花費總金額: ${totalPrice} NT`;
+
+    alert(alertMsg);
+
     console.log('下單內容：', orderItems);
-    alert('下單成功！詳情請見主控台 (Console)。');
+
+    // 可用 fetch/axios 發送至後端寫入 DB
   });
 })();
-
-// === 登入：儲存使用者名稱到 localStorage，並可在導行列顯示 ===
-async function handleLogin(event) {
-  event.preventDefault();
-  const username = document.getElementById('username')?.value ?? '';
-  const password = document.getElementById('password')?.value ?? '';
-
-  // 先把使用者名稱記起來供前端顯示
-  if (username) localStorage.setItem('username', username);
-
-  const response = await fetch('/', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ username, password })
-  });
-
-  // 依你後端邏輯處理導向
-  if (response.ok) {
-    // location.href = '/'; // 例如登入成功返回首頁
-  } else {
-    alert('登入失敗');
-  }
-}
 
 // === 首次渲染 ===
 display_products(products);
