@@ -1,15 +1,15 @@
 // === 產品資料（保留你的資料；會在渲染時自動規整 image_url 路徑） ===
 const products = [
- {'name': 'T-Shirt',       'price': 25, 'gender': '男裝', 'category': '上衣',   'image_url': '.../static/img/T-Shirt.png'},  /* 改善路徑註解 */
-  {'name': 'Blouse',        'price': 30, 'gender': '女裝', 'category': '上衣',   'image_url': '.../static/img/Blouse.png'},
-  {'name': 'Jeans',         'price': 50, 'gender': '通用', 'category': '褲/裙子', 'image_url': '.../static/img/Jeans.png'},
-  {'name': 'Skirt',         'price': 40, 'gender': '女裝', 'category': '褲/裙子', 'image_url': '.../static/img/Skirt.png'},
-  {'name': 'Sneakers',      'price': 60, 'gender': '通用', 'category': '鞋子',   'image_url': '.../static/img/Sneakers.png'},
-  {'name': 'Leather Shoes', 'price': 80, 'gender': '男裝', 'category': '鞋子',   'image_url': '.../static//img/LeatherShoes.png'},
-  {'name': 'Baseball Cap',  'price': 20, 'gender': '通用', 'category': '帽子',   'image_url': '.../static/img/BaseballCap.png'},
-  {'name': 'Sun Hat',       'price': 25, 'gender': '女裝', 'category': '帽子',   'image_url': '.../static/img/SunHat.png'},
-  {'name': 'Running Shoes', 'price': 85, 'gender': '通用', 'category': '鞋子',   'image_url': '.../static/img/RunningShoes.png'},
-  {'name': 'Dress',         'price': 75, 'gender': '女裝', 'category': '上衣',   'image_url': '.../static/img/Dress.png'}
+ {'name': 'T-Shirt',       'price': 25, 'gender': '男裝', 'category': '上衣',   'image_url': './static/img/T-Shirt.png'},  /* 改善路徑註解 */
+  {'name': 'Blouse',        'price': 30, 'gender': '女裝', 'category': '上衣',   'image_url': './static/img/Blouse.png'},
+  {'name': 'Jeans',         'price': 50, 'gender': '通用', 'category': '褲/裙子', 'image_url': './static/img/Jeans.png'},
+  {'name': 'Skirt',         'price': 40, 'gender': '女裝', 'category': '褲/裙子', 'image_url': './static/img/Skirt.png'},
+  {'name': 'Sneakers',      'price': 60, 'gender': '通用', 'category': '鞋子',   'image_url': './static/img/Sneakers.png'},
+  {'name': 'Leather Shoes', 'price': 80, 'gender': '男裝', 'category': '鞋子',   'image_url': './static//img/LeatherShoes.png'},
+  {'name': 'Baseball Cap',  'price': 20, 'gender': '通用', 'category': '帽子',   'image_url': './static/img/BaseballCap.png'},
+  {'name': 'Sun Hat',       'price': 25, 'gender': '女裝', 'category': '帽子',   'image_url': './static/img/SunHat.png'},
+  {'name': 'Running Shoes', 'price': 85, 'gender': '通用', 'category': '鞋子',   'image_url': './static/img/RunningShoes.png'},
+  {'name': 'Dress',         'price': 75, 'gender': '女裝', 'category': '上衣',   'image_url': './static/img/Dress.png'}
 ];
 
 
@@ -76,6 +76,7 @@ const products = [
 
 
 
+
 // === 狀態：每列的勾選與數量 ===
 const rowState = new Map(); 
 
@@ -104,6 +105,8 @@ function normalizeImg(url = '') {
   }
 })();
 
+
+
 // === 渲染產品表格（含 checkbox、± 數量、單列總金額） ===
 function display_products(products_to_display) {
   const tbody = document.querySelector('#products table tbody');
@@ -129,26 +132,37 @@ function display_products(products_to_display) {
         <td>${p.category}</td>
         <td>
           <div class="qty" style="display:inline-flex;align-items:center;gap:6px;">
-            <button type="button" class="btn-dec" style="padding:2px 8px;" disabled>-</button>
-            <input type="number" class="qty-input" min="0" value="${state.qty}" style="width:64px;" disabled>
-            <button type="button" class="btn-inc" style="padding:2px 8px;" disabled>+</button>
+            <!-- 新增：按鈕依照勾選/數量狀態啟用 -->
+            <button type="button" class="btn-dec" style="padding:2px 8px;" ${state.qty <= 1 ? 'disabled' : ''}>-</button>
+            <input type="number" class="qty-input" min="0" value="${state.qty}" style="width:64px;" ${state.checked ? '' : 'disabled'}>
+            <button type="button" class="btn-inc" style="padding:2px 8px;" ${state.checked ? '' : 'disabled'}>+</button>
           </div>
         </td>
         <td class="row-total">${total.toLocaleString()}</td>
       </tr>
     `;
     tbody.insertAdjacentHTML('beforeend', product_info);
+
+    // 新增：初始化每列按鈕狀態
+    const tr = tbody.querySelector(`tr[data-key="${key}"]`);
+    updateQtyButtons(tr);  // 新增函數，控制 ± 與 input 狀態
   }
 
   refreshSummary();
 }
 
-// === 更新 ± 按鈕啟用狀態 ===
+// 新增函數：控制 ± 按鈕與 input 是否可用
 function updateQtyButtons(tr) {
-  const chk = tr.querySelector('.row-check');
-  const qtyInput = tr.querySelector('.qty-input');
-  const btnDec = tr.querySelector('.btn-dec');
-  const btnInc = tr.querySelector('.btn-inc');
+    const qtyInput = tr.querySelector('.qty-input');
+    const btnDec = tr.querySelector('.btn-dec');
+    const btnInc = tr.querySelector('.btn-inc');
+    const qty = Number(qtyInput.value || 0);
+    const checked = tr.querySelector('.row-check').checked;
+
+    qtyInput.disabled = !checked;
+    btnInc.disabled = !checked;
+    btnDec.disabled = !checked || qty <= 1;
+}
 
   if (chk.checked) {
     if (Number(qtyInput.value) === 0) qtyInput.value = 1;
@@ -161,7 +175,7 @@ function updateQtyButtons(tr) {
     btnInc.disabled = true;
     btnDec.disabled = true;
   }
-}
+
 
 // === 事件委派：處理 checkbox、± 按鈕、數量輸入 ===
 (function bindTableEvents() {
@@ -308,4 +322,5 @@ function refreshSummary() {
 })();
 
 // === 首次渲染 ===
-display_products(products);
+document.addEventListener('DOMContentLoaded', () => {
+  display_products(products);})
